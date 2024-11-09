@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with AI</title>
+</head>
+<body>
+<h1>Chat with AI</h1>
+<form action="http://localhost:8080/ai" method="get">
+    <input type="text" name="message" placeholder="질문하세요!">
+    <button type="submit">Send</button>
+</form>
+{{#response}}
+    <h2>나만의 AI 인텔리전스:</h2>
+    <p>{{response}}</p>
+{{/response}}
+</body>
+</html>
