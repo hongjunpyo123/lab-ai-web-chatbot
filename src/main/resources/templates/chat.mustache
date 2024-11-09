@@ -1,17 +1,178 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>Chat with AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>PL Chatbot</title>
+    <style>
+        body {
+              background-image: url('giphy.webp');
+              background-position: center center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              background-attachment: fixed;
+
+
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 0 40px;  /* 좌우 패딩 추가 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+         hr {
+          height: 1px;
+          border: none;
+          background: linear-gradient(to right, transparent, black 50%, transparent);
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 6000px;
+            text-align: center;
+            position: relative;
+        }
+
+        .character {
+            position: relative;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .character-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .speech-bubble {
+            opacity: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: transparent;
+
+            padding: 15px;
+            max-width: 400px;  /* 최대 너비를 크게 증가 */
+            width: calc(100vw - 250px);  /* 뷰포트 너비에 따라 동적으로 조정 */
+            top: -30px;
+            right: -420px;  /* 오른쪽으로 더 이동 */
+            text-align: center;
+            word-wrap: break-word;
+            font-size: 20px;  /* 글자 크기 조정 */
+            line-height: 1.5;  /* 줄 간격 조정 */
+        }
+
+        .speech-bubble:after {
+            bottom: 30px;  /* 위치 조정 */
+            left: -20px;  /* 위치 조정 */
+            border-style: solid;
+            border-color: transparent #ffffff transparent transparent;
+            transform: rotate(-90deg);
+            ontent: '|';
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+}
+
+        .character {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media screen and (max-width: 450px) {
+          .speech-bubble {
+            font-size: 13px;
+          }
+        }
+
+        .user-input {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #user-input {
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #input-form {
+            margin-top: 1%;
+        }
+
+        #send-button {
+              display: none;
+        }
+    </style>
 </head>
 <body>
-<h1>Chat with AI</h1>
-<form action="http://localhost:8080/ai" method="get">
-    <input type="text" name="message" placeholder="질문하세요!">
-    <button type="submit">Send</button>
-</form>
-{{#response}}
-    <h2>나만의 AI 인텔리전스:</h2>
-    <p>{{response}}</p>
-{{/response}}
+<script>
+    function typeWriter(text, elementId, speed = 50) {
+    let i = 0;
+    const element = document.getElementById(elementId);
+    element.style.opacity = '1';
+    element.innerHTML = '';
+
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+
+    setTimeout(typing, 0.1);
+}
+
+window.onload = function() {
+    const chatOutput = document.getElementById('chat-output');
+    const responseText = chatOutput.textContent.trim();
+
+    if (responseText) {
+        chatOutput.textContent = '';  // Clear the content
+        typeWriter(responseText, 'chat-output');
+    }
+};
+</script>
+<div class="chat-container">
+    <div class="character">
+        <img src="character.gif" class="character-image">
+        {{#response}}
+            <div class="speech-bubble" id="chat-output">{{response}}</div>
+        {{/response}}
+        {{^response}}
+            <div class="speech-bubble" style="text-align: center;" id="chat-output">PL 에 오신것을 환영합니다! 무엇이든 물어보세요!</div>
+        {{/response}}
+        <form action="/ai" method="get" id="input-form">
+            <hr>
+            <input type="text" id="user-input" name="message" placeholder="무엇이 궁금하신가요?" style="background-color: transparent; outline: none; border: 0px;">
+            <button id="send-button">전송</button>
+            <hr>
+        </form>
+    </div>
+</div>
+<div class="user-input">
+</div>
+<script src="script.js"></script>
 </body>
 </html>
+
+
