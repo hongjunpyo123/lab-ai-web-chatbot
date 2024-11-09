@@ -17,7 +17,6 @@
             font-family: 'Arial', sans-serif;
 
             margin: 0;
-            padding: 0 40px;  /* 좌우 패딩 추가 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,6 +28,11 @@
           border: none;
           background: linear-gradient(to right, transparent, black 50%, transparent);
         }
+
+        input:focus::placeholder {
+         color: transparent;
+         }
+
         .chat-container {
             width: 100%;
             max-width: 6000px;
@@ -56,6 +60,9 @@
         }
 
         .speech-bubble {
+            color: rgb(245, 66, 182);
+            font-weight: bold;
+
             opacity: 0;
             font-family: 'Open Sans', sans-serif;
             background-color: transparent;
@@ -67,7 +74,7 @@
             right: -420px;  /* 오른쪽으로 더 이동 */
             text-align: center;
             word-wrap: break-word;
-            font-size: 20px;  /* 글자 크기 조정 */
+            font-size: 25px;  /* 글자 크기 조정 */
             line-height: 1.5;  /* 줄 간격 조정 */
         }
 
@@ -77,7 +84,7 @@
             border-style: solid;
             border-color: transparent #ffffff transparent transparent;
             transform: rotate(-90deg);
-            ontent: '|';
+            content: '|';
             animation: blink 0.7s infinite;
         }
 
@@ -87,6 +94,7 @@
 }
 
         .character {
+            background-color: rgba(255, 255, 255, 0.6);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -96,7 +104,7 @@
 
         @media screen and (max-width: 450px) {
           .speech-bubble {
-            font-size: 13px;
+            font-size: 15px;
           }
         }
 
@@ -111,7 +119,7 @@
             text-align: center;
             width: 100%;
             padding: 10px;
-            font-size: 16px;
+            font-size: 20px;
         }
 
         #input-form {
@@ -131,11 +139,18 @@
     element.style.opacity = '1';
     element.innerHTML = '';
 
+    const specificText = "PL AI 도우미 입니다. 무엇을 도와드릴까요?";
+
     function typing() {
         if (i < text.length) {
             element.innerHTML += text.charAt(i);
             i++;
             setTimeout(typing, speed);
+        } if (text !== specificText) {
+            // 타이핑이 완료된 후 5초 뒤에 페이지 새로고침
+            setTimeout(() => {
+                window.location.href = "https://codebox123.synology.me";
+            }, 7000);
         }
     }
 
@@ -159,7 +174,7 @@ window.onload = function() {
             <div class="speech-bubble" id="chat-output">{{response}}</div>
         {{/response}}
         {{^response}}
-            <div class="speech-bubble" style="text-align: center;" id="chat-output">PL 에 오신것을 환영합니다! 무엇이든 물어보세요!</div>
+            <div class="speech-bubble" style="text-align: center;" id="chat-output">PL AI 도우미 입니다. 무엇을 도와드릴까요?</div>
         {{/response}}
         <form action="/ai" method="get" id="input-form">
             <hr>
