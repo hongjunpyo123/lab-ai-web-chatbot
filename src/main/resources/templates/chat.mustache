@@ -53,23 +53,25 @@
         }
 
         .character-image {
-            width: 150px;
-            height: 150px;
+            margin-bottom: 25px;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
             object-fit: cover;
         }
 
         .speech-bubble {
-            color: rgb(245, 66, 182);
+
+            color: rgb(245, 66, 102);
             font-weight: bold;
 
             opacity: 0;
             font-family: 'Open Sans', sans-serif;
-            background-color: transparent;
+            background: radial-gradient(circle at center, rgba(128, 128, 128, 0.15) 15%, rgba(128, 128, 128, 0) 100%);
 
             padding: 15px;
-            max-width: 400px;  /* 최대 너비를 크게 증가 */
-            width: calc(100vw - 250px);  /* 뷰포트 너비에 따라 동적으로 조정 */
+            max-width: 660px;  /* 최대 너비를 크게 증가 */
+            width: calc(100vw - 110px);  /* 뷰포트 너비에 따라 동적으로 조정 */
             top: -30px;
             right: -420px;  /* 오른쪽으로 더 이동 */
             text-align: center;
@@ -94,17 +96,20 @@
 }
 
         .character {
-            background-color: rgba(255, 255, 255, 0.6);
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            top: -60px;
         }
 
         @media screen and (max-width: 450px) {
           .speech-bubble {
-            font-size: 15px;
+            font-size: 19px;
+          }
+          #user-input{
+            font-size: 10px;
           }
         }
 
@@ -115,15 +120,19 @@
         }
 
         #user-input {
-            font-weight: bold;
             text-align: center;
             width: 100%;
             padding: 10px;
-            font-size: 20px;
+            font-size: 17px;
         }
 
+
         #input-form {
-            margin-top: 1%;
+            margin-top: 2%;
+        }
+
+        #input-form:hover {
+            background: radial-gradient(circle at center, rgba(128, 128, 128, 0.1) 30%, rgba(128, 128, 128, 0) 100%);
         }
 
         #send-button {
@@ -139,7 +148,7 @@
     element.style.opacity = '1';
     element.innerHTML = '';
 
-    const specificText = "PL AI 도우미 입니다. 무엇을 도와드릴까요?";
+    const specificText = "저는 AI 도우미 '플래비' 입니다! 도움이 필요하신가요?!";
 
     function typing() {
         if (i < text.length) {
@@ -147,14 +156,72 @@
             i++;
             setTimeout(typing, speed);
         } if (text !== specificText) {
-            // 타이핑이 완료된 후 5초 뒤에 페이지 새로고침
+            // 타이핑이 완료된 후 n초 뒤에 페이지 새로고침
             setTimeout(() => {
-                window.location.href = "https://codebox123.synology.me";
-            }, 7000);
+                eraseTextRecursive().then(() => {
+                    sleep(800).then(() => {
+                    window.location.href = "https://codebox123.synology.me";
+                    } );
+                });
+            }, 15000);
         }
     }
 
     setTimeout(typing, 0.1);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function eraseTextRecursive() {
+    return new Promise((resolve) => {
+        const text = document.getElementById('chat-output');
+        const interval = setInterval(() => {
+            if (text.textContent.length > 0) {
+                text.textContent = text.textContent.slice(0, -1);
+            } else {
+                clearInterval(interval);
+                resolve(); // 모든 텍스트가 지워지면 Promise를 resolve
+            }
+        }, 30);
+    });
+}
+
+function eraseTextRecursive2() {
+    return new Promise((resolve) => {
+        const text = document.getElementById('chat-output');
+        const interval = setInterval(() => {
+            if (text.textContent.length > 0) {
+                text.textContent = text.textContent.slice(0, -1);
+            } else {
+                clearInterval(interval);
+                resolve(); // 모든 텍스트가 지워지면 Promise를 resolve
+            }
+        }, 1);
+    });
+}
+
+function closeKeyboard() {
+  eraseTextRecursive()
+  const input = document.getElementById('user-input');
+  input.setAttribute('readonly', 'readonly');
+  let index = 0;
+
+  function typeThinking() {
+    if (index < thinkingText.length) {
+      input.value = thinkingText.slice(0, index + 1);
+      index++;
+      setTimeout(typeThinking, 210); // 각 문자 사이의 지연 시간 (밀리초)
+    }
+  }
+  input.style.color = '#A9A9A9';
+  typeThinking(); // 타이핑 효과 시작
+
+  setTimeout(function() {
+    input.removeAttribute('readonly');
+    eraseTextRecursive2();
+  }, 5000);
 }
 
 window.onload = function() {
@@ -162,7 +229,6 @@ window.onload = function() {
     const responseText = chatOutput.textContent.trim();
 
     if (responseText) {
-        chatOutput.textContent = '';  // Clear the content
         typeWriter(responseText, 'chat-output');
     }
 };
@@ -174,12 +240,12 @@ window.onload = function() {
             <div class="speech-bubble" id="chat-output">{{response}}</div>
         {{/response}}
         {{^response}}
-            <div class="speech-bubble" style="text-align: center;" id="chat-output">PL AI 도우미 입니다. 무엇을 도와드릴까요?</div>
+            <div class="speech-bubble" style="text-align: center;" id="chat-output">저는 AI 도우미 '플래비' 입니다! 도움이 필요하신가요?!</div>
         {{/response}}
         <form action="/ai" method="get" id="input-form">
             <hr>
-            <input type="text" id="user-input" name="message" placeholder="무엇이 궁금하신가요?" style="background-color: transparent; outline: none; border: 0px;">
-            <button id="send-button">전송</button>
+            <input type="text" id="user-input" name="message" placeholder="무엇이 궁금하신가요?" autocomplete="off" style="background-color: transparent; outline: none; border: 0px;">
+            <button id="send-button" onclick="closeKeyboard();" >전송</button>
             <hr>
         </form>
     </div>

@@ -23,12 +23,16 @@ public class ChatController {
     private ChatMessage labdata = new ChatMessage(
             "연구실_이름 : pl 랩실, " +
             "교수:김정민 교수님, " +
-            "연구_분야:[머신러닝, 프로그래밍]" +
-            "구성원:[옥지훈(랩장), 이지훈(랩원), 전현수(랩원), 이창우(랩원), 박서연(랩원), 홍준표(랩원)]" +
-                    "[송인혜(랩원), 장성훈(랩원), 윤철(랩원)]" +
+            "연구_분야:[AI, 웹, 앱]" +
+            "구성원:[옥지훈, 이지훈, 전현수, 이창우, 박서연, 홍준표]" +
+                    "[송인혜, 장성훈, 윤철]" +
             "모집_시기:미정" +
-            "구성원_수:9" +
-            "모집절차:1.지원서작성/2.면접/3.1차합격발표/4.수습기간/5.최종합격발표");
+            "구성원수:9" +
+            "모집절차:1.지원서작성/2.면접/3.1차합격발표/4.수습기간/5.최종합격발표" +
+            "인재상:[열정적인]" +
+            "분위기:[상호존중, 편안함, 자유로움]" +
+            "장점:[수평적문화,자유로운소통]" +
+            "하는일:[팀프로젝트진행,주1회세미나 등]");
 
     @Autowired
     public ChatController(AnthropicChatModel chatModel) {
@@ -41,6 +45,7 @@ public class ChatController {
     }
     @GetMapping("/ai")
     public String generate(@RequestParam String message, Model model) {
+
         if(message.isEmpty()){
             model.addAttribute("response", "질문 주시면 성실히 답변드릴께요!");
             return "chat";
