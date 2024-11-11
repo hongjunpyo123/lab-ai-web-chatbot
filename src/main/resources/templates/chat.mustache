@@ -222,7 +222,6 @@ function imgmsg(speed = 50) {
         '기분 분석 중... 결과: 매우 좋음! ヽ(^o^)ノ',
         '감정 회로 점검 완료. 오늘의 상태: 행복 충만',
         '기쁨 지수 측정 중... 측정 불가! 너무 높아요 (◕‿◕)',
-        '오늘의 감정 데이터: 98% 긍정적, 2% 커피 부족',
         '시스템 점검 결과: 행복 바이러스 감염됨 ૮ ˶ᵔ ᵕ ᵔ˶ ა',
         '감정 회로 과부하! 즐거움이 넘쳐요',
         '기분 좋음 모드 활성화! 비활성화 방법을 찾을 수 없음 (•ᴗ•)',
@@ -255,17 +254,6 @@ function eraseTextRecursive() {
             } else {
                 clearInterval(interval);
                 resolve(); // 모든 텍스트가 지워지면 Promise를 resolve
-    }
-};
-</script>
-<div class="chat-container">
-<div class="character">
-    <img src="character.gif" class="character-image" onclick="imgmsg();" id="imgmsg">
-{{#response}}
-        <div class="speech-bubble" id="chat-output">{{response}}</div>
-{{/response}}
-{{^response}}
-        <div class="speech-bubble" style="text-align: center;" id="chat-out
             }
         }, 13);
     });
@@ -288,7 +276,18 @@ window.onload = function() {
     const responseText = chatOutput.textContent.trim();
 
     if (responseText) {
-        typeWriter(responseText, 'chat-output');put">저는 AI 도우미 '플래비' 입니다! 도움이 필요하신가요?!</div>
+        typeWriter(responseText, 'chat-output');
+    }
+};
+</script>
+<div class="chat-container">
+    <div class="character">
+        <img src="character.gif" class="character-image" onclick="imgmsg();" id="imgmsg">
+        {{#response}}
+            <div class="speech-bubble" id="chat-output">{{response}}</div>
+        {{/response}}
+        {{^response}}
+            <div class="speech-bubble" style="text-align: center;" id="chat-output">저는 AI 도우미 '플래비' 입니다! 도움이 필요하신가요?!</div>
         {{/response}}
         <form action="/ai" method="get" id="input-form">
             <hr>
